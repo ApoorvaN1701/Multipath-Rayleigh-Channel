@@ -1,5 +1,5 @@
 
-# Multipath Rayleigh Channel Simulation
+# Multipath Rayleigh Channel with Different Doppler Frequencies
 
 ## Introduction
 This project simulates the **Power Spectral Density (PSD)** of a multipath Rayleigh fading channel with different Doppler frequencies. The simulation is implemented in **Python** using **NumPy** and **Matplotlib** to analyze how different Doppler frequencies affect signal degradation in a wireless communication environment.
