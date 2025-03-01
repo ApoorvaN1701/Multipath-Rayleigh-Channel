@@ -1,58 +1,101 @@
-# Multipath Rayleigh Channel with Different Doppler Frequencies
+
+# Multipath Rayleigh Channel Simulation
 
 ## Introduction
-Rayleigh fading is a statistical model that describes how radio signals propagate in an environment with multiple paths between a transmitter and a receiver. The presence of multiple paths causes signal variations due to constructive and destructive interference.
+This project simulates the **Power Spectral Density (PSD)** of a multipath Rayleigh fading channel with different Doppler frequencies. The simulation is implemented in **Python** using **NumPy** and **Matplotlib** to analyze how different Doppler frequencies affect signal degradation in a wireless communication environment.
 
-This project models a **Multipath Rayleigh Channel** with different **Doppler frequencies** using MATLAB and Python simulations. The impact of Doppler shift on received signal power and spectral density is analyzed.
+## Features:
+- Simulates a **Rayleigh fading channel** with multiple Doppler frequencies.
+- Uses **Fast Fourier Transform (FFT)** to compute and visualize **Power Spectral Density (PSD)**.
+- Implements **averaging over multiple realizations** to reduce noise and improve accuracy.
+- Works with **different Doppler frequencies** to model signal distortions in wireless systems.
 
-## Features
-- Simulation of **Rayleigh fading** in a multipath channel
-- Implementation in both **MATLAB** and **Python**
-- Analysis of **Power Spectral Density (PSD)** for different Doppler shifts
-- Avoids division-by-zero errors using a small epsilon for numerical stability
+## Power Spectral Density Plot:
+The following figure shows the **PSD for different Doppler frequencies**:
 
-## Implementation Details
-### MATLAB Code
-- Simulates a Rayleigh fading channel with multiple Doppler frequencies
-- Uses **Fast Fourier Transform (FFT)** to analyze frequency response
-- Generates **Power Spectral Density (PSD) plots**
-- MATLAB script available in `rayleigh_fading.m`
+![Power Spectral Density](Power_Spectral_Density.png)
 
-### Python Code
-- Implements the MATLAB simulation in **NumPy & Matplotlib**
-- Generates **PSD plots** for different Doppler frequencies
-- Python script available in `rayleigh_fading.py`
+## Installation & Setup
+### **1. Clone the Repository**
+Run the following command in your terminal:
+```bash
+git clone https://github.com/ApoorvaN1701/Multipath-Rayleigh-Channel.git
+cd Multipath-Rayleigh-Channel
+```
 
-## Installation & Usage
-1. Clone the repository:
-   ```bash
-   git clone [https://github.com/yourusername/multipath-rayleigh.git](https://github.com/ApoorvaN1701/Multipath-Rayleigh-Channel.git)
-   cd multipath-rayleigh
-   ```
+### **2. Install Dependencies**
+Ensure you have **Python 3.x** installed, then install the required libraries:
+```bash
+pip install -r requirements.txt
+```
 
-2. **For MATLAB:**
-   - Open `rayleigh_fading.m` in MATLAB
-   - Run the script to generate PSD plots
+### **3. Run the Simulation**
+Execute the Python script to generate the **Power Spectral Density plot**:
+```bash
+python rayleigh_psd.py
+```
 
-3. **For Python:**
-   - Install dependencies:
-     ```bash
-     pip install numpy matplotlib
-     ```
-   - Run the script:
-     ```bash
-     python rayleigh_fading.py
-     ```
+## Files in This Repository
+| File | Description |
+|------|-------------|
+| `rayleigh_psd.py` | Python script for Rayleigh fading channel simulation |
+| `Power_Spectral_Density.png` | Image of the generated PSD plot |
+| `README.md` | Project documentation |
+| `requirements.txt` | List of dependencies |
+| `.gitignore` | Git ignore file to exclude unnecessary files |
 
-## Results & Observations
-- The **power spectral density (PSD)** varies for different Doppler shifts.
-- Higher **Doppler frequencies** result in greater spectral broadening and more severe signal fading.
-- The project provides insights into wireless **channel modeling** and **fading effects** in communication systems.
+## Understanding the Code
+The simulation follows these steps:
+1. **Define Simulation Parameters**
+   - Set FFT size (`N`), Doppler frequencies (`fd`), and number of realizations.
+2. **Generate Rayleigh Fading Channel**
+   - Compute **Doppler Spectrum** for different `fd` values.
+   - Generate **complex Gaussian random variables** to model multipath fading.
+3. **Apply FFT and Compute PSD**
+   - Perform FFT on the signal.
+   - Average over multiple realizations for a smooth PSD plot.
+4. **Plot the Results**
+   - Use `matplotlib` to generate and visualize the **PSD curves**.
 
-## References
-- MATLAB Central File Exchange
-- Electronics Notes on Rayleigh Fading
-- ScienceDirect on Doppler Frequency Shift
+## Example Code (Python)
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+N = 512  # FFT size
+fd = [5.55, 70, 100]  # Doppler frequencies
+L = 5  # Number of multipath taps
+tau = np.array([0, 2, 8, 14, 20]) * 1e-6  # Delay values
+Ts = 2e-6  # Sampling time
+
+epsilon = 1e-6  # Small value to prevent divide by zero
+plt.figure(figsize=(10, 6))
+for fm in fd:
+    df = (2 * fm) / (N - 1)
+    f = np.linspace(-fm, fm, N)
+    S = 1.5 / (np.pi * fm * np.sqrt(np.maximum(1 - (f / fm) ** 2, epsilon)))
+    
+    gaussian_vari = np.random.randn(L) + 1j * np.random.randn(L)
+    PSD = 20 * np.log10(np.abs(np.fft.fft(gaussian_vari, N)) + epsilon)
+    plt.plot(f, PSD, label=f'fd = {fm} Hz')
+
+plt.xlabel("Frequency (Hz)")
+plt.ylabel("Power Spectral Density (dB)")
+plt.title("Power Spectral Density for Different Doppler Frequencies")
+plt.legend()
+plt.grid()
+plt.show()
+```
+
+## Future Work
+- Implement **Matlab version** of the simulation for comparison.
+- Add **more Doppler frequency values** for enhanced modeling.
+- Optimize the simulation for **real-time wireless communication scenarios**.
 
 ## License
-This project is open-source and available under the MIT License.
+This project is **open-source** under the **MIT License**.
+
+## Contributors
+- **Apoorva N.** *(Developer & Researcher)*
+
+---
